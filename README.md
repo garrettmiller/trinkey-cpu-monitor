@@ -12,4 +12,8 @@ Host side requires `serial, psutil`
 
 Load `serial_control.py` as `code.py` on the Trinkey, then run `trinkey_cpu_monitor.py` on your host system.  Be sure to define serial device and a process name of interest to monitor (if desired) 
 
+To run on boot, run `sudo crontab -e` and add `@reboot /path/to/trinkey_cpu_monitor.py`
+
+### Acknowledgements:
+
 Originally based on scripts by [Dave Parker](https://github.com/daveparker/neotrinkey)

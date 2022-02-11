@@ -48,6 +48,7 @@ pixels.show()
 colors = [color.BLACK] * NUM_PIXELS
 intensities = [DEFAULT_INTENSITY] * NUM_PIXELS
 
+
 def wheel(pos):
     # Input a value 0 to 255 to get a color value.
     # The colours are a transition r - g - b - back to r.
@@ -69,31 +70,38 @@ def wheel(pos):
         b = int(255 - pos * 3)
     return (r, g, b)
 
+
 def rainbow_cycle(wait):
     for j in range(255):
         for i in range(NUM_PIXELS):
             pixel_index = (i * 256 // NUM_PIXELS) + j
             pixels[i] = wheel(pixel_index & 255)
-        print(pixels)
         pixels.show()
         time.sleep(wait)
+
 
 def serial_read():
     if supervisor.runtime.serial_bytes_available:
         return input()
     return None
 
+
 def main():
     while True:
         data = serial_read()
         if data is None:
-            #rainbow_cycle(0.001)
             continue
-        #Cast our list sent over serial into ints and display it on all LEDs
-        for i in range(NUM_PIXELS):
-            listNumbers = [int(x) for x in list(data.split(','))]
-            pixels[i] = listNumbers
-        pixels.show()
+        # Catch rainbow state
+        elif "RAINBOW" in data:
+            rainbow_cycle(0.001)
+            continue
+        # Cast our list sent over serial into ints and display it on all LEDs
+        else:
+            for i in range(NUM_PIXELS):
+                listNumbers = [int(x) for x in list(data.split(","))]
+                pixels[i] = listNumbers
+            pixels.show()
+
 
 if __name__ == "__main__":
     main()
